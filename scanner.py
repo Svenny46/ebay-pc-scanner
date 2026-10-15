@@ -145,7 +145,8 @@ def evaluate(item, search, cfg):
 def get_token():
     cid, secret = os.environ.get("EBAY_CLIENT_ID"), os.environ.get("EBAY_CLIENT_SECRET")
     if not cid or not secret:
-        sys.exit("Missing EBAY_CLIENT_ID / EBAY_CLIENT_SECRET repository secrets.")
+        print("eBay keys not added yet (EBAY_CLIENT_ID / EBAY_CLIENT_SECRET). Skipping this run.")
+        sys.exit(0)
     auth = base64.b64encode(f"{cid}:{secret}".encode()).decode()
     r = requests.post(TOKEN_URL, timeout=30,
                       headers={"Authorization": f"Basic {auth}",
