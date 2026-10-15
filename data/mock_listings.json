@@ -1,0 +1,20 @@
+{
+  "Gaming desktops": [
+    {"itemId": "m1", "title": "Gaming PC Ryzen 5 5600X RTX 3070 16GB RAM 1TB SSD", "price": {"value": "380.00"},
+     "shippingOptions": [{"shippingCostType": "FIXED", "shippingCost": {"value": "40.00"}}], "condition": "Used",
+     "itemWebUrl": "https://www.ebay.com/itm/m1", "buyingOptions": ["FIXED_PRICE", "BEST_OFFER"],
+     "seller": {"username": "pcseller", "feedbackPercentage": "99.8", "feedbackScore": 812}, "itemLocation": {"postalCode": "282**", "country": "US"}},
+    {"itemId": "m2", "title": "Custom gaming desktop i7 RTX 4070 Super 32GB", "price": {"value": "1000.00"},
+     "shippingOptions": [{"shippingCostType": "FIXED", "shippingCost": {"value": "0.00"}}], "condition": "Used"},
+    {"itemId": "m3", "title": "Gaming PC case only no GPU RTX ready", "price": {"value": "60.00"}, "condition": "Used"}
+  ],
+  "Graphics cards": [
+    {"itemId": "m4", "title": "EVGA GeForce RTX3080 10GB FTW3 Ultra", "price": {"value": "230.00"},
+     "shippingOptions": [{"shippingCostType": "FIXED", "shippingCost": {"value": "0.00"}}], "condition": "Used",
+     "itemWebUrl": "https://www.ebay.com/itm/m4", "buyingOptions": ["FIXED_PRICE"]},
+    {"itemId": "m5", "title": "RTX 3060 12GB", "price": {"value": "200.00"}, "condition": "Used"},
+    {"itemId": "m6", "title": "RTX 3080 RTX 3090 RTX 4090 gaming card cheap", "price": {"value": "150.00"}, "condition": "Used"},
+    {"itemId": "m7", "title": "MSI RX 6800 XT for parts not working", "price": {"value": "90.00"}, "condition": "For parts or not working"},
+    {"itemId": "m8", "title": "RTX 4090 box only", "price": {"value": "100.00"}, "condition": "Used"}
+  ]
+}

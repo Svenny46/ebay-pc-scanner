@@ -1,0 +1,23 @@
+{
+  "_note": "Conservative USED resale estimates in USD (eBay sold, typical condition). First-pass filter only: every hit is re-checked against live sold comps before Sven is notified. Update these as the market moves.",
+  "gpus": {
+    "gtx 1060": 60, "gtx 1070": 90, "gtx 1070 ti": 100, "gtx 1080": 120, "gtx 1080 ti": 170,
+    "gtx 1650": 80, "gtx 1660": 90, "gtx 1660 super": 100, "gtx 1660 ti": 100,
+    "rtx 2060": 140, "rtx 2060 super": 160, "rtx 2070": 170, "rtx 2070 super": 200,
+    "rtx 2080": 220, "rtx 2080 super": 240, "rtx 2080 ti": 300,
+    "rtx 3050": 150, "rtx 3060": 210, "rtx 3060 ti": 240, "rtx 3070": 280, "rtx 3070 ti": 300,
+    "rtx 3080": 380, "rtx 3080 ti": 450, "rtx 3090": 650, "rtx 3090 ti": 750,
+    "rtx 4060": 240, "rtx 4060 ti": 290, "rtx 4070": 430, "rtx 4070 super": 480,
+    "rtx 4070 ti": 520, "rtx 4070 ti super": 600, "rtx 4080": 750, "rtx 4080 super": 800, "rtx 4090": 1500,
+    "rtx 5050": 200, "rtx 5060": 240, "rtx 5060 ti": 320, "rtx 5070": 450, "rtx 5070 ti": 650,
+    "rtx 5080": 900, "rtx 5090": 2000,
+    "rx 580": 55, "rx 5600 xt": 100, "rx 5700 xt": 130,
+    "rx 6600": 160, "rx 6600 xt": 180, "rx 6650 xt": 190, "rx 6700 xt": 230, "rx 6750 xt": 250,
+    "rx 6800": 300, "rx 6800 xt": 350, "rx 6900 xt": 400, "rx 6950 xt": 430,
+    "rx 7600": 200, "rx 7600 xt": 230, "rx 7700 xt": 300, "rx 7800 xt": 380, "rx 7900 gre": 430,
+    "rx 7900 xt": 520, "rx 7900 xtx": 700,
+    "rx 9060 xt": 260, "rx 9070": 400, "rx 9070 xt": 520
+  },
+  "pc_base_value": 200,
+  "_pc_base_note": "Added to the GPU value for a complete working desktop (CPU, board, RAM, SSD, case, PSU). Kept low on purpose."
+}
