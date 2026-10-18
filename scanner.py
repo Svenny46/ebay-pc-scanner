@@ -143,7 +143,8 @@ def evaluate(item, search, cfg):
 
 
 def get_token():
-    cid, secret = os.environ.get("EBAY_CLIENT_ID"), os.environ.get("EBAY_CLIENT_SECRET")
+    cid = (os.environ.get("EBAY_CLIENT_ID") or "").strip()
+    secret = (os.environ.get("EBAY_CLIENT_SECRET") or "").strip()
     if not cid or not secret:
         print("eBay keys not added yet (EBAY_CLIENT_ID / EBAY_CLIENT_SECRET). Skipping this run.")
         sys.exit(0)
@@ -153,7 +154,10 @@ def get_token():
                                "Content-Type": "application/x-www-form-urlencoded"},
                       data={"grant_type": "client_credentials",
                             "scope": "https://api.ebay.com/oauth/api_scope"})
-    r.raise_for_status()
+    if r.status_code >= 300:
+        # eBay's error text never contains the keys; surface it as a GitHub annotation
+        print(f"::error::eBay sign-in failed ({r.status_code}): {r.text[:300]}")
+        sys.exit(1)
     return r.json()["access_token"]
 
 
@@ -205,10 +209,20 @@ def open_issue(d):
                                "Accept": "application/vnd.github+json"},
                       json={"title": title, "body": issue_body(d), "labels": ["deal"]})
     if r.status_code >= 300:
-        print(f"Issue creation failed ({r.status_code}): {r.text[:300]}")
+        print(f"::warning::Issue creation failed ({r.status_code}): {r.text[:300]}")
 
 
 def main():
+    try:
+        run()
+    except SystemExit:
+        raise
+    except Exception as e:  # make any crash readable in the run summary
+        print(f"::error::Scanner crashed: {type(e).__name__}: {str(e)[:300]}")
+        raise
+
+
+def run():
     mock = "--mock" in sys.argv
     cfg = load_json(DATA / "searches.json", {})
     vals = load_json(DATA / "values.json", {})
@@ -228,7 +242,7 @@ def main():
             try:
                 batches.append((s, search_ebay(token, s)))
             except requests.HTTPError as e:
-                print(f"Search '{s['name']}' failed: {e}")
+                print(f"::warning::Search '{s['name']}' failed: {e} {e.response.text[:200] if e.response is not None else ''}")
 
     checked, deals = 0, []
     for s, items in batches:
@@ -248,7 +262,7 @@ def main():
 
     if not mock:
         SEEN_FILE.write_text(json.dumps(seen))
-    print(f"Checked {checked} new listings, {len(deals)} possible deals, opened {min(len(deals), 5)} issues.")
+    print(f"::notice::Checked {checked} new listings, {len(deals)} possible deals, opened {min(len(deals), 5)} issues.")
 
 
 if __name__ == "__main__":
