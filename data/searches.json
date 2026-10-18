@@ -1,19 +1,49 @@
 {
   "_note": "Each search runs every scan. category 179 = PC Desktops & All-In-Ones, 27386 = Graphics/Video Cards. Prices are buy price limits in USD.",
   "searches": [
-    {"name": "Gaming desktops", "q": "gaming pc rtx", "category": "179", "kind": "pc", "min_price": 150, "max_price": 1000},
-    {"name": "Gaming desktops (AMD GPU)", "q": "gaming pc radeon rx", "category": "179", "kind": "pc", "min_price": 150, "max_price": 1000},
-    {"name": "Graphics cards", "q": "rtx", "category": "27386", "kind": "gpu", "min_price": 80, "max_price": 1000},
-    {"name": "Graphics cards (AMD)", "q": "radeon rx", "category": "27386", "kind": "gpu", "min_price": 80, "max_price": 1000}
+    {
+      "name": "Gaming desktops",
+      "q": "gaming pc rtx",
+      "category": "179",
+      "kind": "pc",
+      "min_price": 150,
+      "max_price": 1000
+    },
+    {
+      "name": "Gaming desktops (AMD GPU)",
+      "q": "gaming pc radeon rx",
+      "category": "179",
+      "kind": "pc",
+      "min_price": 150,
+      "max_price": 1000
+    },
+    {
+      "name": "Graphics cards",
+      "q": "rtx",
+      "category": "27386",
+      "kind": "gpu",
+      "min_price": 80,
+      "max_price": 1000
+    },
+    {
+      "name": "Graphics cards (AMD)",
+      "q": "radeon rx",
+      "category": "27386",
+      "kind": "gpu",
+      "min_price": 80,
+      "max_price": 1000
+    }
   ],
   "rules": {
     "min_profit": 100,
-    "min_margin": 0.20,
+    "min_margin": 0.2,
     "pc_fix_cost": 40,
     "parts_fix_cost": 90,
     "gpu_resale_fee_rate": 0.136,
-    "gpu_resale_fee_fixed": 0.40,
+    "gpu_resale_fee_fixed": 0.4,
     "gpu_outbound_shipping": 15,
-    "pc_resale_fee_rate": 0.0
+    "pc_resale_fee_rate": 0.0,
+    "min_price_vs_resale": 0.3,
+    "min_price_vs_resale_parts": 0.15
   }
 }

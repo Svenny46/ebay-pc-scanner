@@ -56,14 +56,15 @@ def normalize(title):
     return f" {t.strip()} "
 
 
-def find_gpu(title, gpu_values):
+def find_gpu(title, gpu_values, allow_bare=True):
     """Return (gpu_name, value) for the most specific GPU named in the title."""
     t = normalize(title)
-    # Allow titles that drop the rtx/gtx/rx prefix, e.g. "3060 ti 12gb".
+    # Graphics-card titles sometimes drop the rtx/gtx/rx prefix ("3060 ti 12gb").
+    # Desktop titles may not: "Dell OptiPlex 3080" is a model number, not a GPU.
     best = None
     for name, value in gpu_values.items():
         bare = name.split(" ", 1)[1]
-        for variant in (name, bare):
+        for variant in ((name, bare) if allow_bare else (name,)):
             if f" {variant} " in t:
                 if best is None or len(name) > len(best[0]):
                     best = (name, value)
@@ -81,7 +82,7 @@ def evaluate(item, search, cfg):
     low = title.lower()
     if any(w in low for w in REJECT_WORDS):
         return None
-    gpu = find_gpu(title, cfg["gpus"])
+    gpu = find_gpu(title, cfg["gpus"], allow_bare=search["kind"] == "gpu")
     if not gpu:
         return None
     gpu_name, gpu_value = gpu
@@ -94,7 +95,7 @@ def evaluate(item, search, cfg):
     elif opts and opts[0].get("shippingCostType") == "CALCULATED":
         ship = 35.0 if search["kind"] == "pc" else 12.0  # rough guess for calculated shipping
     buy = price + ship
-    if buy <= 0:
+    if buy <= 0 or price < search.get("min_price", 0):
         return None
 
     condition = (item.get("condition") or "").lower()
@@ -108,6 +109,12 @@ def evaluate(item, search, cfg):
         resale = gpu_value
         fees = resale * rules["gpu_resale_fee_rate"] + rules["gpu_resale_fee_fixed"] + rules["gpu_outbound_shipping"]
         fix = rules["parts_fix_cost"] if is_parts else 0
+
+    # Far below market is usually a scam, a deposit, or a listing for something else.
+    # Broken "for parts" items legitimately go cheaper, so they get a lower floor.
+    floor = rules.get("min_price_vs_resale_parts", 0.15) if is_parts else rules.get("min_price_vs_resale", 0.3)
+    if buy < floor * resale:
+        return None
 
     profit = resale - buy - fees - fix
     if profit < rules["min_profit"] or profit < rules["min_margin"] * buy:
