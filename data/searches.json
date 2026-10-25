@@ -44,6 +44,7 @@
     "gpu_outbound_shipping": 15,
     "pc_resale_fee_rate": 0.0,
     "min_price_vs_resale": 0.3,
-    "min_price_vs_resale_parts": 0.15
+    "min_price_vs_resale_parts": 0.15,
+    "parts_gpu_risk_rate": 0.35
   }
 }

@@ -13,3 +13,12 @@ Every 30 minutes GitHub Actions checks newly listed eBay Buy It Now gaming deskt
 - `data/searches.json`: search terms, price ranges, profit rules.
 - `data/values.json`: used resale estimates per GPU (conservative). Update as prices move.
 - Close or delete deal issues whenever you like; they're just alerts.
+
+## How it learns
+
+The hourly Claude deal filter (a scheduled task) rates every pick the scanner opens:
+
+- It comments a verdict (👍 good / 👎 bad + the reason) on the issue, labels it `good-pick` or `bad-pick`, and closes bad picks.
+- Every verdict is logged in `data/feedback.jsonl`.
+- When the same title phrase shows up in 2+ bad picks and never in a good one, Claude adds it to `data/learned_filters.json` and the scanner skips it from then on.
+- To overrule a verdict, comment on the issue (e.g. "this was actually good"). Claude reads that on its next run and undoes any filter it caused.

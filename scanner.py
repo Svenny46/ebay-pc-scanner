@@ -34,8 +34,23 @@ REJECT_WORDS = [
     "laptop", "notebook", "backplate only", "fan only", "fans only", "shroud", "cooler only",
     "bracket", "water block", "waterblock", "dead", "no power", "no display", "artifacting",
     "case only", "picture of", "photo of", "image of", "parts only",
+    # Stripped boards: the GPU chip and/or memory have been removed, so nothing to fix.
+    "no core", "no vram", "no gpu core", "no die", "no chip", "core removed", "vram removed",
+    "pcb only", "board only", "bare pcb", "donor board", "no memory chips",
 ]
 PARTS_WORDS = ["for parts", "not working", "as is", "as-is", "untested"]
+LEARNED_FILE = DATA / "learned_filters.json"
+
+
+def flat(text):
+    """Lowercase, punctuation to spaces: 'NO CORE/NO VRAM' -> ' no core no vram '."""
+    return " " + re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", text.lower())).strip() + " "
+
+
+def learned_rejects():
+    """Phrases the hourly Claude reviewer added after rating bad picks (see README)."""
+    data = load_json(LEARNED_FILE, {})
+    return [p["phrase"] for p in data.get("reject_phrases", []) if p.get("phrase")]
 
 
 def load_json(path, default):
@@ -80,7 +95,8 @@ def evaluate(item, search, cfg):
     rules = cfg["rules"]
     title = item.get("title", "")
     low = title.lower()
-    if any(w in low for w in REJECT_WORDS):
+    ft = flat(title)
+    if any(w in low or flat(w) in ft for w in REJECT_WORDS + cfg.get("learned", [])):
         return None
     gpu = find_gpu(title, cfg["gpus"], allow_bare=search["kind"] == "gpu")
     if not gpu:
@@ -109,6 +125,10 @@ def evaluate(item, search, cfg):
         resale = gpu_value
         fees = resale * rules["gpu_resale_fee_rate"] + rules["gpu_resale_fee_fixed"] + rules["gpu_outbound_shipping"]
         fix = rules["parts_fix_cost"] if is_parts else 0
+        if is_parts:
+            # A broken card often can't be fixed at all; budget for that risk
+            # instead of pricing it as a working card minus a small repair.
+            fix += round(resale * rules.get("parts_gpu_risk_rate", 0.35))
 
     # Far below market is usually a scam, a deposit, or a listing for something else.
     # Broken "for parts" items legitimately go cheaper, so they get a lower floor.
@@ -234,6 +254,7 @@ def run():
     cfg = load_json(DATA / "searches.json", {})
     vals = load_json(DATA / "values.json", {})
     cfg["gpus"], cfg["pc_base_value"] = vals["gpus"], vals["pc_base_value"]
+    cfg["learned"] = learned_rejects()
 
     seen = load_json(SEEN_FILE, {})
     now = int(time.time())

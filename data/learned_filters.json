@@ -1,0 +1,4 @@
+{
+  "_note": "Title phrases the scanner skips, learned from picks the hourly Claude reviewer rated bad. Claude adds a phrase only when it caused 2+ bad picks and never appeared in a good one. Delete a line here to undo it.",
+  "reject_phrases": []
+}
